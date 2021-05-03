@@ -20,14 +20,21 @@ Implementation Notes
 
 """
 
-import digitalio
 import time
+from random import randint
+import digitalio
+
+try:
+    from typing import List
+except ImportError:
+    pass
+
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/jposada202020/CircuitPython_MorseCode.git"
 
 
-class Emitter(object):
+class Emitter:
     """
     Creates a Receiver object
     ex: sreceptor = Emmiter('D13')
@@ -57,16 +64,19 @@ class Emitter(object):
             internal_led.outmorse("Hugo AKA the Architect")
 
     """
+
     def __init__(self, pin):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
-        self.id = pin
+        self.id = pin  # pylint: disable=invalid-name
 
     def turnoff(self, pausa: float = 0.1):
         """
         Turns off the Emitter
-        :param pausa: time in seconds for the Emitter to be OFF
+
+        :param float pausa: time in seconds for the Emitter to be OFF
         :return: None
+
         """
         self.pin.value = False
         time.sleep(pausa)
@@ -74,28 +84,35 @@ class Emitter(object):
     def turnon(self, pausa: float = 0.1):
         """
         Turns on the Emitter
-        :param pausa: time in seconds for the Emitter to be ON
+        :param float pausa: time in seconds for the Emitter to be ON
         :return: None
+
         """
+
         self.pin.value = True
         time.sleep(pausa)
 
     def flashing(self, ontime: float, offtime: float, repeat: int):
         """
         Flash the led according to given parameters
-        :param ontime: time in seconds for the Emitter to be ON
-        :param offtime: time in seconds for the Emitter to be OFF
-        :param repeat: number of repetitions
+
+        :param float ontime: time in seconds for the Emitter to be ON
+        :param float offtime: time in seconds for the Emitter to be OFF
+        :param int repeat: number of repetitions
         :return: None
+
         """
+
         for _ in range(repeat):
             self.turnon(ontime)
             self.turnoff(offtime)
 
     def blinking(self, blinktime: int):
         """
-        :param blinktime: duration in seconds
+
+        :param int blinktime: duration in seconds
         :return: None
+
         """
         self.turnon(blinktime)
         self.turnoff(blinktime)
@@ -103,12 +120,18 @@ class Emitter(object):
     def pattern(self, patternl: List[int]) -> None:
         """
         Converts a list of values [0 or 1] to an output in the Emitter
-        :param patternl: list of [0-1] values
+
+        :param list patternl: list of [0-1] values
         :return: None
-        ex: led = Emitter('D2')
-        codigo = [1,1,0,1,0,0,1,1,1,0,0,1,1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,1]
-        led.pattern(codigo)
+
+        .. code-block:: python
+
+            led = Emitter('D2')
+            codigo = [1,1,0,1,0,0,1,1,1,0,0,1,1,1,1,1,0,0,0,1]
+            led.pattern(codigo)
+
         """
+
         for item in patternl:
             if item == 1:
                 self.turnon()
@@ -120,9 +143,12 @@ class Emitter(object):
     def randomblink(self, iterl: int) -> None:
         """
         Emits a random output to the Emitter
-        :param iterl: number of values to be randomly generated
+
+        :param int iterl: number of values to be randomly generated
         :return: None
+
         """
+
         self.pattern([randint(0, 1) for _ in range(iterl)])
         self.turnoff()
 
@@ -130,88 +156,132 @@ class Emitter(object):
     def convletter(letter: str, final: str) -> str:
         """
         Converts a letter to its representation in morse code
-        :param letter: Letter to be converted
-        :param final: Final character encoding
+
+        :param str letter: Letter to be converted
+        :param str final: Final character encoding
         :return: string representation in morse code
-        >>> Emitter('D5').convletter('a', '|')
-        '.*-|'
+
         """
 
         morsetabs = {
-            'A': '.-', 'a': '.-',
-            'B': '-...', 'b': '-...',
-            'C': '-.-.', 'c': '-.-.',
-            'D': '-..', 'd': '-..',
-            'E': '.', 'e': '.',
-            'F': '..-.', 'f': '..-.',
-            'G': '--.', 'g': '--.',
-            'H': '....', 'h': '....',
-            'I': '..', 'i': '..',
-            'J': '.---', 'j': '.---',
-            'K': '-.-', 'k': '-.-',
-            'L': '.-..', 'l': '.-..',
-            'M': '--', 'm': '--',
-            'N': '-.', 'n': '-.',
-            'O': '---', 'o': '---',
-            'P': '.--.', 'p': '.--.',
-            'Q': '--.-', 'q': '--.-',
-            'R': '.-.', 'r': '.-.',
-            'S': '...', 's': '...',
-            'T': '-', 't': '-',
-            'U': '..-', 'u': '..-',
-            'V': '...-', 'v': '...-',
-            'W': '.--', 'w': '.--',
-            'X': '-..-', 'x': '-..-',
-            'Y': '-.--', 'y': '-.--',
-            'Z': '--..', 'z': '--..',
-            '0': '-----', ',': '--..--',
-            '1': '.----', '.': '.-.-.-',
-            '2': '..---', '?': '..--..',
-            '3': '...--', ';': '-.-.-.',
-            '4': '....-', ':': '---...',
-            '5': '.....', "'": '.----.',
-            '6': '-....', '-': '-....-',
-            '7': '--...', '/': '-..-.',
-            '8': '---..', '(': '-.--.-',
-            '9': '----.', ')': '-.--.-',
-            ' ': ' ', '_': '..--.-',
-            '!': '-·-·--'
+            "A": ".-",
+            "a": ".-",
+            "B": "-...",
+            "b": "-...",
+            "C": "-.-.",
+            "c": "-.-.",
+            "D": "-..",
+            "d": "-..",
+            "E": ".",
+            "e": ".",
+            "F": "..-.",
+            "f": "..-.",
+            "G": "--.",
+            "g": "--.",
+            "H": "....",
+            "h": "....",
+            "I": "..",
+            "i": "..",
+            "J": ".---",
+            "j": ".---",
+            "K": "-.-",
+            "k": "-.-",
+            "L": ".-..",
+            "l": ".-..",
+            "M": "--",
+            "m": "--",
+            "N": "-.",
+            "n": "-.",
+            "O": "---",
+            "o": "---",
+            "P": ".--.",
+            "p": ".--.",
+            "Q": "--.-",
+            "q": "--.-",
+            "R": ".-.",
+            "r": ".-.",
+            "S": "...",
+            "s": "...",
+            "T": "-",
+            "t": "-",
+            "U": "..-",
+            "u": "..-",
+            "V": "...-",
+            "v": "...-",
+            "W": ".--",
+            "w": ".--",
+            "X": "-..-",
+            "x": "-..-",
+            "Y": "-.--",
+            "y": "-.--",
+            "Z": "--..",
+            "z": "--..",
+            "0": "-----",
+            ",": "--..--",
+            "1": ".----",
+            ".": ".-.-.-",
+            "2": "..---",
+            "?": "..--..",
+            "3": "...--",
+            ";": "-.-.-.",
+            "4": "....-",
+            ":": "---...",
+            "5": ".....",
+            "'": ".----.",
+            "6": "-....",
+            "-": "-....-",
+            "7": "--...",
+            "/": "-..-.",
+            "8": "---..",
+            "(": "-.--.-",
+            "9": "----.",
+            ")": "-.--.-",
+            " ": " ",
+            "_": "..--.-",
+            "!": "-·-·--",
         }
 
         convletter = morsetabs[letter]
-        convertedletter = ''
+        convertedletter = ""
         fin = len(convletter) - 1
         for ind, symbol in enumerate(convletter):
             if ind == fin:
                 convertedletter = convertedletter + symbol + final
             else:
-                convertedletter = convertedletter + symbol + '*'
+                convertedletter = convertedletter + symbol + "*"
 
         return convertedletter
 
     def convertword(self, word: str) -> str:
         """
         Convert a word to its representation in morse code
+
         :param word: word string
         :return: string of morse code
+
         """
-        worklist = ''
+
+        worklist = ""
         fin = len(word) - 1
         for ile, letter in enumerate(word):
             if ile == fin:
-                worklist = worklist + self.convletter(letter, '#')
+                worklist = worklist + self.convletter(letter, "#")
             else:
-                worklist = worklist + self.convletter(letter, '|')
+                worklist = worklist + self.convletter(letter, "|")
         return worklist
 
     def convertphrase(self, phrase: str) -> List[str]:
         """
-        Convert a phrase to a list of words converted to morse code.  We use a list to allow the library
+        Convert a phrase to a list of words converted to morse code.
+        We use a list to allow the library
         do some threading methods
+
         :param phrase: string to be converted to morse code
         :return: list of words converted to morse code
+
         """
-        phrase = phrase.split(' ')
+
+        phrase = phrase.split(" ")
         phraselist = []
         for word in phrase:
             phraselist.append(self.convertword(word))
@@ -220,35 +290,41 @@ class Emitter(object):
     def outmorse(self, phrase: str, duration: float = 0.1) -> None:
         """
         Plays the morse code
-        :param phrase:
-        :param duration: This value hods the logic of the morse code wpm(words per minute)
-                         In this case we use 0.1 that means that we use 120/0.12
+
+        :param str phrase:
+        :param float duration: This value hods the logic of the morse code wpm(words per minute)
+         In this case we use 0.1 that means that we use 120/0.12
         :return: None
+
         """
+
         codes = self.convertphrase(phrase)
         for word in codes:
             for symbol in word:
-                if symbol == '*':
+                if symbol == "*":
                     self.turnoff(duration)
-                elif symbol == '.':
+                elif symbol == ".":
                     self.turnon(duration)
-                elif symbol == '-':
+                elif symbol == "-":
                     self.turnon(duration * 3)
-                elif symbol == '|':
+                elif symbol == "|":
                     self.turnoff(duration * 3)
-                elif symbol == '#':
+                elif symbol == "#":
                     self.turnoff(duration * 7)
 
     def convertbpm(self, bpm):
         """
         Converts beats per minute in light output
-        :param bpm:
+
+        :param int bpm: Beats per minute
         :return: None
+
         """
+
         divider = 60 / bpm
         for _ in range(150):
             self.blinking(divider / 2)
         self.turnoff()
 
     def __str__(self):
-        return r'Sensor is using IO number: {}'.format(self.id)
+        return r"Sensor is using IO number: {}".format(self.id)

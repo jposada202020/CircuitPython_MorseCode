@@ -20,4 +20,3 @@ while True:
     print("starting")
     internal_led.outmorse(MESSAGE)
     print("Message Ended")
-

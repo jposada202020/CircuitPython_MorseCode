@@ -33,7 +33,7 @@ or individual libraries can be installed using
 Usage Example
 =============
 
-See `morsecode_simpletest.py` or the readthedocs to learn how to use the library
+See ``morsecode_simpletest.py`` or the readthedocs to learn how to use the library
 
 Contributing
 ============
