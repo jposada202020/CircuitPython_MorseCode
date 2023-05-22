@@ -42,12 +42,6 @@ Usage Example
 
 See ``morsecode_simpletest.py`` or the readthedocs to learn how to use the library
 
-Contributing
-============
-
-Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/jposada202020/CircuitPython_MorseCode/blob/HEAD/CODE_OF_CONDUCT.md>`_
-before contributing to help this project stay welcoming.
 
 Documentation
 =============
